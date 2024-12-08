@@ -1,0 +1,220 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Kalender 2025</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            margin: 20px;
+            text-align: center;
+            line-height: 1.6;
+        }
+        h1 {
+            margin-bottom: 10px;
+        }
+        .legend {
+            margin: 10px 0;
+        }
+        .legend span {
+            display: inline-block;
+            width: 20px;
+            height: 20px;
+            margin-right: 5px;
+            vertical-align: middle;
+        }
+        .kalender {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 20px;
+            justify-items: center;
+        }
+        .bulan {
+            border: 1px solid #ccc;
+            padding: 10px;
+            width: 100%;
+            max-width: 350px;
+            box-shadow: 2px 2px 5px rgba(0, 0, 0, 0.1);
+        }
+        table {
+            width: 100%;
+            border-collapse: collapse;
+        }
+        th, td {
+            border: 1px solid #ddd;
+            padding: 5px;
+            text-align: center;
+        }
+        th {
+            background-color: #f4f4f4;
+        }
+        td {
+            height: 30px;
+        }
+        td:hover {
+            background-color: #f0f0f0;
+        }
+        .libur {
+            background-color: #FFD700;
+            font-weight: bold;
+        }
+        .kegiatan {
+            background-color: #90EE90;
+            font-weight: bold;
+        }
+        .minggu {
+            color: red;
+            font-weight: bold;
+        }
+        .keterangan {
+            margin-top: 10px;
+            text-align: left;
+        }
+        footer {
+            margin-top: 30px;
+            font-size: 14px;
+        }
+        footer a {
+            text-decoration: none;
+            color: #007BFF;
+        }
+        footer a:hover {
+            text-decoration: underline;
+        }
+    </style>
+</head>
+<body>
+    <h1>Kalender 2025</h1>
+    <div class="legend">
+        <span style="background-color: #FFD700;"></span> Libur Nasional
+        <br>
+        <span style="background-color: #90EE90;"></span> Kegiatan Sekolah
+        
+    </div>
+    <div class="kalender">
+        <!-- Kalender akan diisi oleh JavaScript -->
+    </div>
+    <footer>
+        Design by: 
+        <a href="https://whatsapp.com/channel/0029VaGBW8F2UPBHEGyQj73s/327" target="_blank">
+            Tenaga Administrasi Sekolah
+        </a>
+    </footer>
+    <script>
+        const kalender = document.querySelector('.kalender');
+        const bulan = [
+            "Januari", "Februari", "Maret", "April", "Mei", "Juni",
+            "Juli", "Agustus", "September", "Oktober", "November", "Desember"
+        ];
+
+        const liburNasional = {
+            "1-1": "Tahun Baru Masehi",
+            "29-1": "Tahun Baru Imlek 2576 Kongzili",
+            "14-3": "Hari Suci Nyepi Tahun Baru Saka 1947",
+            "18-4": "Wafat Isa Almasih",
+            "1-5": "Hari Buruh Internasional",
+            "22-5": "Kenaikan Isa Almasih",
+            "18-6": "Hari Raya Idul Adha 1446 H",
+            "7-7": "Tahun Baru Islam 1447 H",
+            "17-8": "Hari Kemerdekaan RI",
+            "26-9": "Maulid Nabi Muhammad SAW",
+            "25-12": "Hari Natal"
+        };
+
+        const kegiatanSekolah = {
+            "6-1": "Awal Semester",
+            "1-3": "Pentas Seni",
+            "3-3": "Tryout Asesmen",
+            "25-4": "Hari Buku Nasional",
+            "2-5": "Peringatan Hari Pendidikan Nasional",
+            "17-6": "Pengumuman Kelulusan",
+            "28-10": "Hari Sumpah Pemuda",
+            "22-11": "Pelatihan Guru",
+            "10-12": "Outing Class"
+        };
+
+        function buatKalender(tahun) {
+            for (let i = 0; i < 12; i++) {
+                const tanggal = new Date(tahun, i, 1);
+                const namaBulan = bulan[i];
+                const hariPertama = tanggal.getDay();
+                const hariDalamBulan = new Date(tahun, i + 1, 0).getDate();
+
+                const divBulan = document.createElement('div');
+                divBulan.classList.add('bulan');
+                divBulan.innerHTML = `<h3>${namaBulan} ${tahun}</h3>`;
+
+                const table = document.createElement('table');
+                const thead = document.createElement('thead');
+                const tbody = document.createElement('tbody');
+
+                thead.innerHTML = `
+                    <tr>
+                        <th>Min</th>
+                        <th>Sen</th>
+                        <th>Sel</th>
+                        <th>Rab</th>
+                        <th>Kam</th>
+                        <th>Jum</th>
+                        <th>Sab</th>
+                    </tr>
+                `;
+                table.appendChild(thead);
+
+                let row = document.createElement('tr');
+                for (let j = 0; j < hariPertama; j++) {
+                    row.appendChild(document.createElement('td'));
+                }
+
+                const keteranganBulanan = [];
+
+                for (let t = 1; t <= hariDalamBulan; t++) {
+                    const cell = document.createElement('td');
+                    const tanggalString = `${t}-${i + 1}`;
+                    const hari = (hariPertama + t - 1) % 7;
+
+                    if (liburNasional[tanggalString]) {
+                        cell.textContent = t;
+                        cell.classList.add('libur');
+                        cell.title = liburNasional[tanggalString];
+                        keteranganBulanan.push(`${t} ${namaBulan}: ${liburNasional[tanggalString]}`);
+                    } else if (kegiatanSekolah[tanggalString]) {
+                        cell.textContent = t;
+                        cell.classList.add('kegiatan');
+                        cell.title = kegiatanSekolah[tanggalString];
+                        keteranganBulanan.push(`${t} ${namaBulan}: ${kegiatanSekolah[tanggalString]}`);
+                    } else if (hari === 0) {
+                        cell.textContent = t;
+                        cell.classList.add('minggu');
+                    } else {
+                        cell.textContent = t;
+                    }
+
+                    row.appendChild(cell);
+
+                    if ((hariPertama + t) % 7 === 0) {
+                        tbody.appendChild(row);
+                        row = document.createElement('tr');
+                    }
+                }
+                tbody.appendChild(row);
+                table.appendChild(tbody);
+
+                divBulan.appendChild(table);
+
+                if (keteranganBulanan.length > 0) {
+                    const keterangan = document.createElement('div');
+                    keterangan.classList.add('keterangan');
+                    keterangan.innerHTML = `<strong>Keterangan:</strong><br>` + keteranganBulanan.join('<br>');
+                    divBulan.appendChild(keterangan);
+                }
+
+                kalender.appendChild(divBulan);
+            }
+        }
+
+        buatKalender(2025);
+    </script>
+</body>
+</html>
